@@ -39,7 +39,7 @@ NEXT_PUBLIC_PRIVY_CLIENT_ID=your_privy_client_id_here
 ```
 
 **Get Privy credentials:**
-1. Go to [console.privy.io](https://console.privy.io)
+1. Go to [dashboard.privy.io](https://dashboard.privy.io)
 2. Create a new application
 3. Copy the App ID and Client ID
 
@@ -193,7 +193,7 @@ const config = createConfig({
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Privy Documentation](https://docs.privy.io/)
 - [Wagmi Documentation](https://wagmi.sh/)
-- [Avalanche Documentation](https://docs.avax.network/)
+- [Avalanche Documentation](https://build.avax.network/docs/)
 
 ### 🤝 Contributing
 
@@ -244,7 +244,7 @@ NEXT_PUBLIC_PRIVY_CLIENT_ID=your_privy_client_id_here
 ```
 
 **Obtener credenciales de Privy:**
-1. Ve a [console.privy.io](https://console.privy.io)
+1. Ve a [dashboard.privy.io](https://dashboard.privy.io)
 2. Crea una nueva aplicación
 3. Copia el App ID y Client ID
 
@@ -398,7 +398,7 @@ const config = createConfig({
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Privy Documentation](https://docs.privy.io/)
 - [Wagmi Documentation](https://wagmi.sh/)
-- [Avalanche Documentation](https://docs.avax.network/)
+- [Avalanche Documentation](https://build.avax.network/docs/)
 
 ## 🤝 Contribuir
 
