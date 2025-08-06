@@ -1,12 +1,14 @@
-'use client';
-import { PrivyProvider } from '@privy-io/react-auth';
-import { avalancheFuji } from 'wagmi/chains';
+"use client";
+import { PrivyProvider } from "@privy-io/react-auth";
+import { avalancheFuji } from "wagmi/chains";
 
 interface PrivyProviderWrapperProps {
   children: React.ReactNode;
 }
 
-export default function PrivyProviderWrapper({ children }: PrivyProviderWrapperProps) {
+export default function PrivyProviderWrapper({
+  children,
+}: Readonly<PrivyProviderWrapperProps>) {
   return (
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
@@ -14,13 +16,13 @@ export default function PrivyProviderWrapper({ children }: PrivyProviderWrapperP
       config={{
         embeddedWallets: {
           ethereum: {
-            createOnLogin: 'users-without-wallets'
-          }
+            createOnLogin: "users-without-wallets",
+          },
         },
-        supportedChains: [avalancheFuji]
+        supportedChains: [avalancheFuji],
       }}
     >
       {children}
     </PrivyProvider>
   );
-} 
+}

@@ -1,41 +1,49 @@
-'use client';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { useState, useEffect } from 'react';
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../constants/index';
+"use client";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useState, useEffect } from "react";
+import {
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useChainId,
+} from "wagmi";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../constants/index";
 
 export default function Home() {
-  const [newName, setNewName] = useState('');
+  const [newName, setNewName] = useState("");
   const { ready, login, logout, authenticated, user } = usePrivy();
   const { wallets } = useWallets();
   const { data: currentName, refetch: refetchName } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: CONTRACT_ABI,
-    functionName: 'sayName',
-    chainId: 43113,
+    functionName: "sayName",
+    // chainId: 43113,
+    chainId: useChainId(),
   });
-  
 
-  const { data: writeData, writeContract: updateName, isPending } = useWriteContract();
+  const {
+    data: writeData,
+    writeContract: updateName,
+    isPending,
+  } = useWriteContract();
 
   const { isLoading: isConfirming } = useWaitForTransactionReceipt({
     hash: writeData,
   });
 
-
   const handleUpdateName = async () => {
     if (!newName.trim()) return;
-    
+
     try {
       updateName({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: CONTRACT_ABI,
-        functionName: 'updateName',
-        args: [newName]
+        functionName: "updateName",
+        args: [newName],
       });
-      setNewName('');
+      setNewName("");
     } catch (error) {
-      console.error('Error updating name:', error);
+      console.error("Error updating name:", error);
     }
   };
 
@@ -44,30 +52,37 @@ export default function Home() {
       refetchName();
     }
   }, [writeData, isConfirming, refetchName]);
-  
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <h1 className="text-4xl font-bold text-gray-900">Hello World!</h1>
+          <h1 className="text-4xl font-bold text-gray-900">NameX</h1>
         </div>
-        
+
         <div className="text-center">
           {ready ? (
-            <div className="text-green-600 font-semibold text-lg">✅ Privy is ready!</div>
+            <div className="text-green-600 font-semibold text-lg">
+              ✅ Privy is ready!
+            </div>
           ) : (
-            <div className="text-blue-600 font-semibold text-lg">⏳ Loading...</div>
+            <div className="text-blue-600 font-semibold text-lg">
+              ⏳ Loading...
+            </div>
           )}
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md border border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Wallet Connection</h2>
-          
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            Wallet Connection
+          </h2>
+
           {!authenticated ? (
             <div className="space-y-4">
               <button
                 onClick={login}
                 className="w-full bg-purple-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors font-medium"
+                disabled={!ready}
               >
                 🔗 Connect Wallet
               </button>
@@ -79,11 +94,14 @@ export default function Home() {
                   <div>
                     <p className="text-green-800 font-medium">✅ Connected!</p>
                     {user?.email && (
-                      <p className="text-green-600 text-sm">{user.email.address}</p>
+                      <p className="text-green-600 text-sm">
+                        {user.email.address}
+                      </p>
                     )}
                     {wallets && wallets.length > 0 && (
                       <p className="text-green-600 text-sm font-mono">
-                        {wallets[0].address.slice(0, 6)}...{wallets[0].address.slice(-4)}
+                        {wallets[0].address.slice(0, 6)}...
+                        {wallets[0].address.slice(-4)}
                       </p>
                     )}
                   </div>
@@ -101,8 +119,10 @@ export default function Home() {
 
         {authenticated && (
           <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md border border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Smart Contract</h2>
-            
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Smart Contract
+            </h2>
+
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Current Name
@@ -116,7 +136,10 @@ export default function Home() {
 
             <div className="space-y-4">
               <div>
-                <label htmlFor="newName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="newName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   New Name
                 </label>
                 <input
@@ -126,7 +149,12 @@ export default function Home() {
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newName.trim() && !isPending && !isConfirming) {
+                    if (
+                      e.key === "Enter" &&
+                      newName.trim() &&
+                      !isPending &&
+                      !isConfirming
+                    ) {
                       handleUpdateName();
                     }
                   }}
@@ -134,7 +162,7 @@ export default function Home() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
               </div>
-              
+
               <button
                 onClick={handleUpdateName}
                 disabled={!newName.trim() || isPending || isConfirming}
@@ -143,10 +171,10 @@ export default function Home() {
                 {isPending || isConfirming ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    {isPending ? 'Updating...' : 'Confirming...'}
+                    {isPending ? "Updating..." : "Confirming..."}
                   </div>
                 ) : (
-                  'Update Name'
+                  "Update Name"
                 )}
               </button>
             </div>
